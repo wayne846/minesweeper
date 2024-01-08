@@ -3,6 +3,8 @@
 #include "tile.h"
 #include <QScreen>
 #include <QGraphicsPixmapItem>
+#include <time.h>
+#include <stdlib.h>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
@@ -34,9 +36,10 @@ void MainWindow::start(){
     //set screen
     scene = new QGraphicsScene();
     scene->setSceneRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    srand(time(NULL));
     for(int i = 0; i < HEIGHT_TILE_NUM; i++){
         for(int j = 0; j < WIDTH_TILE_NUM; j++){
-            Tile *tile = new Tile(this, j, i);
+            Tile *tile = new Tile(this, j, i, rand()%9);
             scene->addItem(tile);
         }
     }
