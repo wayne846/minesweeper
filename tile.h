@@ -12,9 +12,11 @@ class MainWindow;
 class Tile : public QGraphicsRectItem{
     public:
         Tile(MainWindow *window, int x, int y, int type);
+        ~Tile();
 
         void click();
         void setFlag();
+        void setType(int t);
 
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent *event);

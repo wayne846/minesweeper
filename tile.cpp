@@ -83,7 +83,7 @@ Tile::Tile(MainWindow *window, int x, int y, int type){
 }
 
 void Tile::click(){
-    qDebug() << "clicked " << "x:" << x << "  y: " << y;
+    //qDebug() << "clicked " << "x:" << x << "  y: " << y;
     this->setBrush(clicked_color);
     this->setPen(clicked_color);
     this->setAcceptHoverEvents(false);
@@ -101,10 +101,63 @@ void Tile::setFlag(){
     }
 }
 
+void Tile::setType(int t){
+    if(type == t) return;
+    type = t;
+    delete(image_type);
+    if(type == -1){
+        QPixmap pixmap = QPixmap();
+        pixmap.load(":/mine.png");
+        pixmap = pixmap.scaled(QSize(window->TILE_WIDTH, window->TILE_WIDTH));
+        image_type = new QGraphicsPixmapItem(pixmap);
+        image_type->setPos(window->TILE_WIDTH * x, window->TILE_WIDTH * y + window->HUD_HEIGHT);
+    }else{
+        QGraphicsTextItem *text = new QGraphicsTextItem("");
+        if(type != 0) text->setPlainText(QString::number(type));
+        switch(type){
+            case 0:
+                break;
+            case 1:
+                text->setDefaultTextColor(window->ONE_COLOR);
+                break;
+            case 2:
+                text->setDefaultTextColor(window->TWO_COLOR);
+                break;
+            case 3:
+                text->setDefaultTextColor(window->THREE_COLOR);
+                break;
+            case 4:
+                text->setDefaultTextColor(window->FOUR_COLOR);
+                break;
+            case 5:
+                text->setDefaultTextColor(window->FIVE_COLOR);
+                break;
+            case 6:
+                text->setDefaultTextColor(window->SIX_COLOR);
+                break;
+            case 7:
+                text->setDefaultTextColor(window->SEVEN_COLOR);
+                break;
+            case 8:
+                text->setDefaultTextColor(window->EIGHT_COLOR);
+                break;
+        }
+        text->setFont(QFont("New Times Roman", window->TILE_WIDTH/50.0 * 27));
+        text->setPos(window->TILE_WIDTH * x + window->TILE_WIDTH/2.0 - text->boundingRect().width()/2.0, window->TILE_WIDTH * y + window->TILE_WIDTH - text->boundingRect().height() + window->HUD_HEIGHT);
+        image_type = text;
+    }
+    image_type->setZValue(1);
+    if(!hadClicked) image_type->hide();
+    window->scene->addItem(image_type);
+}
+
 void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event){
     switch(event->button()){
         case Qt::LeftButton:
-            if(!isFlag && !hadClicked) click();
+            if(!isFlag && !hadClicked){
+                if(!window->hadFirstClick) window->createMap(x, y);
+                click();
+            }
             break;
         case Qt::RightButton:
             if(!hadClicked) setFlag();
@@ -121,4 +174,9 @@ void Tile::hoverEnterEvent(QGraphicsSceneHoverEvent *event){
 void Tile::hoverLeaveEvent(QGraphicsSceneHoverEvent *event){
     this->setBrush(normal_color);
     this->setPen(normal_color);
+}
+
+Tile::~Tile(){
+    delete(image_flag);
+    delete(image_type);
 }

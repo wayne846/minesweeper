@@ -5,6 +5,7 @@
 #include <QGraphicsPixmapItem>
 #include <time.h>
 #include <stdlib.h>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
@@ -33,19 +34,92 @@ void MainWindow::start(){
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    //set screen
+    //set scene
     scene = new QGraphicsScene();
     scene->setSceneRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-    srand(time(NULL));
-    for(int i = 0; i < HEIGHT_TILE_NUM; i++){
-        for(int j = 0; j < WIDTH_TILE_NUM; j++){
-            Tile *tile = new Tile(this, j, i, rand()%9);
-            scene->addItem(tile);
+    scene->addRect(QRect(0, 0, WINDOW_WIDTH, HUD_HEIGHT), QPen(HUD_COLOR), QBrush(HUD_COLOR));
+    ui->graphicsView->setScene(scene);
+
+    //init tileMap
+    for(int i = 0; i < tileMap.size(); i++){
+        for(int j = 0; j < tileMap[0].size(); j++){
+            if(tileMap[i][j] != NULL) delete(tileMap[i][j]);
         }
     }
-    scene->addRect(QRect(0, 0, WINDOW_WIDTH, HUD_HEIGHT), QPen(HUD_COLOR), QBrush(HUD_COLOR));
+    tileMap.clear();
+    for(int i = 0; i < HEIGHT_TILE_NUM; i++){
+        vector<Tile*> v;
+        for(int j = 0; j < WIDTH_TILE_NUM; j++){
+            Tile *tile = new Tile(this, j, i, 0);
+            scene->addItem(tile);
+            v.push_back(tile);
+        }
+        tileMap.push_back(v);
+    }
 
-    ui->graphicsView->setScene(scene);
+    //set other value
+    hadFirstClick = false;
+}
+
+void MainWindow::createMap(int startX, int startY){
+    qDebug() << "startX:" << startX << "  startY: " << startY;
+    vector<vector<int>> typeMap;
+    srand(time(NULL));
+    //init typeMap
+    for(int i = 0; i < HEIGHT_TILE_NUM; i++){
+        vector<int> v;
+        for(int j = 0; j < WIDTH_TILE_NUM; j++){
+            v.push_back(0);
+        }
+        typeMap.push_back(v);
+    }
+    //make mine
+    int n = 0;
+    for(int i = 0; n < MINE_NUM && i < HEIGHT_TILE_NUM * WIDTH_TILE_NUM; i++){
+        int x = i % WIDTH_TILE_NUM;
+        int y = i / WIDTH_TILE_NUM;
+        if(x >= startX-1 && x <= startX+1 && y >= startY-1 && y <= startY+1) continue;
+        typeMap[y][x] = -1;
+        n++;
+    }
+    //random
+    for(int i = 0; i < HEIGHT_TILE_NUM; i++){
+        for(int j = 0; j < WIDTH_TILE_NUM; j++){
+            if(j >= startX-1 && j <= startX+1 && i >= startY-1 && i <= startY+1) continue;
+            int x = rand() % WIDTH_TILE_NUM;
+            int y = rand() % HEIGHT_TILE_NUM;
+            while(x >= startX-1 && x <= startX+1 && y >= startY-1 && y <= startY+1){
+                x = rand() % WIDTH_TILE_NUM;
+                y = rand() % HEIGHT_TILE_NUM;
+            }
+            int t = typeMap[i][j];
+            typeMap[i][j] = typeMap[y][x];
+            typeMap[y][x] = t;
+        }
+    }
+    //set number near mine
+    for(int i = 0; i < HEIGHT_TILE_NUM; i++){
+        for(int j = 0; j < WIDTH_TILE_NUM; j++){
+            if(typeMap[i][j] != -1) continue;
+
+            for(int k = i-1; k <= i+1; k++){
+                for(int h = j-1; h <= j+1; h++){
+                    if(k >= 0 && k < HEIGHT_TILE_NUM &&
+                       h >= 0 && h < WIDTH_TILE_NUM &&
+                       typeMap[k][h] != -1){
+                        typeMap[k][h]++;
+                    }
+                }
+            }
+        }
+    }
+    //make it become real
+    for(int i = 0; i < HEIGHT_TILE_NUM; i++){
+        for(int j = 0; j < WIDTH_TILE_NUM; j++){
+            tileMap[i][j]->setType(typeMap[i][j]);
+        }
+    }
+    hadFirstClick = true;
 }
 
 MainWindow::~MainWindow()

@@ -3,6 +3,11 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include <vector>
+
+using namespace std;
+
+class Tile;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -41,6 +46,11 @@ class MainWindow : public QMainWindow
         int WINDOW_HEIGHT;
 
         QGraphicsScene *scene;
+        vector<vector<Tile*>> tileMap; //[y][x]
+
+        bool hadFirstClick;
+
+        void createMap(int startX, int startY);
 
     private:
         Ui::MainWindow *ui;
