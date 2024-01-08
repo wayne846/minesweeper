@@ -79,18 +79,19 @@ Tile::Tile(MainWindow *window, int x, int y, int type){
 
     //set other value
     this->isFlag = false;
-    this->hadClicked = false;
+    this->hasClicked = false;
 }
 
 void Tile::click(){
-    if(hadClicked) return;
+    if(hasClicked) return;
     qDebug() << "clicked " << "x:" << x << "  y: " << y;
     this->setBrush(clicked_color);
     this->setPen(clicked_color);
     this->setAcceptHoverEvents(false);
     image_type->show();
-    hadClicked = true;
+    hasClicked = true;
     if(type == 0) openBlank();
+    if(type == -1) window->die();
 }
 
 void Tile::setFlag(){
@@ -149,12 +150,16 @@ void Tile::setType(int t){
         image_type = text;
     }
     image_type->setZValue(1);
-    if(!hadClicked) image_type->hide();
+    if(!hasClicked) image_type->hide();
     window->scene->addItem(image_type);
 }
 
 int Tile::getType(){
     return type;
+}
+
+bool Tile::getHasClicked(){
+    return hasClicked;
 }
 
 void Tile::openBlank(){
@@ -171,15 +176,16 @@ void Tile::openBlank(){
 }
 
 void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event){
+    if(window->isDead) return;
     switch(event->button()){
         case Qt::LeftButton:
-            if(!isFlag && !hadClicked){
+            if(!isFlag && !hasClicked){
                 if(!window->hadFirstClick) window->createMap(x, y);
                 click();
             }
             break;
         case Qt::RightButton:
-            if(!hadClicked) setFlag();
+            if(!hasClicked) setFlag();
             break;
         default:
             break;
@@ -187,6 +193,7 @@ void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event){
 }
 
 void Tile::hoverEnterEvent(QGraphicsSceneHoverEvent *event){
+    if(window->isDead) return;
     this->setBrush(hover_color);
     this->setPen(hover_color);
 }

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include <QTimer>
 #include <vector>
 
 using namespace std;
@@ -49,11 +50,18 @@ class MainWindow : public QMainWindow
         vector<vector<Tile*>> tileMap; //[y][x]
 
         bool hadFirstClick;
+        bool isDead;
 
         void createMap(int startX, int startY);
+        void die();
+
+    private slots:
+        void update();
 
     private:
         Ui::MainWindow *ui;
+
+        QTimer *timer;
 
         void start();
 };

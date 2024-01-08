@@ -18,6 +18,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     WINDOW_WIDTH = TILE_WIDTH * WIDTH_TILE_NUM;
     WINDOW_HEIGHT = TILE_WIDTH * HEIGHT_TILE_NUM + HUD_HEIGHT;
 
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+
     start();
 }
 
@@ -59,6 +62,27 @@ void MainWindow::start(){
 
     //set other value
     hadFirstClick = false;
+    isDead = false;
+
+    timer->stop();
+}
+
+void MainWindow::die(){
+    isDead = true;
+    if(!timer->isActive()){
+        timer->start(130 + 1700 / MINE_NUM);
+    }
+}
+
+void MainWindow::update(){
+    for(int i = 0; i < HEIGHT_TILE_NUM * WIDTH_TILE_NUM; i++){
+        int x = i % WIDTH_TILE_NUM;
+        int y = i / WIDTH_TILE_NUM;
+        if(!tileMap[y][x]->getHasClicked() && tileMap[y][x]->getType() == -1){
+            tileMap[y][x]->click();
+            break;
+        }
+    }
 }
 
 void MainWindow::createMap(int startX, int startY){
