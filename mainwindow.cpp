@@ -2,16 +2,18 @@
 #include "./ui_mainwindow.h"
 #include "tile.h"
 #include <QScreen>
+#include <QGraphicsPixmapItem>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
 
-    TILE_WIDTH = 40;
+    TILE_WIDTH = 50;
     WIDTH_TILE_NUM = 9;
     HEIGHT_TILE_NUM = 9;
     MINE_NUM = 10;
+    HUD_HEIGHT = 100;
     WINDOW_WIDTH = TILE_WIDTH * WIDTH_TILE_NUM;
-    WINDOW_HEIGHT = TILE_WIDTH * HEIGHT_TILE_NUM;
+    WINDOW_HEIGHT = TILE_WIDTH * HEIGHT_TILE_NUM + HUD_HEIGHT;
 
     start();
 }
@@ -38,6 +40,7 @@ void MainWindow::start(){
             scene->addItem(tile);
         }
     }
+    scene->addRect(QRect(0, 0, WINDOW_WIDTH, HUD_HEIGHT), QPen(HUD_COLOR), QBrush(HUD_COLOR));
 
     ui->graphicsView->setScene(scene);
 }
