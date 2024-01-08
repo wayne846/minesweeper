@@ -83,12 +83,14 @@ Tile::Tile(MainWindow *window, int x, int y, int type){
 }
 
 void Tile::click(){
-    //qDebug() << "clicked " << "x:" << x << "  y: " << y;
+    if(hadClicked) return;
+    qDebug() << "clicked " << "x:" << x << "  y: " << y;
     this->setBrush(clicked_color);
     this->setPen(clicked_color);
     this->setAcceptHoverEvents(false);
     image_type->show();
     hadClicked = true;
+    if(type == 0) openBlank();
 }
 
 void Tile::setFlag(){
@@ -149,6 +151,23 @@ void Tile::setType(int t){
     image_type->setZValue(1);
     if(!hadClicked) image_type->hide();
     window->scene->addItem(image_type);
+}
+
+int Tile::getType(){
+    return type;
+}
+
+void Tile::openBlank(){
+    if(type != 0) return;
+    for(int i = y-1; i <= y+1; i++){
+        for(int j = x-1; j <= x+1; j++){
+            if(i >= 0 && i < window->HEIGHT_TILE_NUM &&
+               j >= 0 && j < window->WIDTH_TILE_NUM &&
+               window->tileMap[i][j]->getType() != -1){
+                window->tileMap[i][j]->click();
+            }
+        }
+    }
 }
 
 void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event){

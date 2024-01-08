@@ -17,6 +17,7 @@ class Tile : public QGraphicsRectItem{
         void click();
         void setFlag();
         void setType(int t);
+        int getType();
 
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -36,6 +37,8 @@ class Tile : public QGraphicsRectItem{
         QGraphicsItem *image_flag;
         QGraphicsItem *image_type;
         MainWindow *window;
+
+        void openBlank();
 };
 
 #endif // TILE_H
