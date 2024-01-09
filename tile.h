@@ -19,6 +19,7 @@ class Tile : public QGraphicsRectItem{
         void setType(int t);
         int getType();
         bool getHasClicked();
+        bool getIsFlag();
 
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent *event);

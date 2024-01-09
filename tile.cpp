@@ -84,11 +84,13 @@ Tile::Tile(MainWindow *window, int x, int y, int type){
 
 void Tile::click(){
     if(hasClicked) return;
-    qDebug() << "clicked " << "x:" << x << "  y: " << y;
+
+    //qDebug() << "clicked " << "x:" << x << "  y: " << y;
     this->setBrush(clicked_color);
     this->setPen(clicked_color);
     this->setAcceptHoverEvents(false);
     image_type->show();
+    if(isFlag) setFlag();
     hasClicked = true;
     if(type == 0) openBlank();
     if(type == -1) window->die();
@@ -98,9 +100,11 @@ void Tile::setFlag(){
     if(isFlag){
         image_flag->hide();
         isFlag = false;
+        window->changeFlagCount(true);
     }else{
         image_flag->show();
         isFlag = true;
+        window->changeFlagCount(false);
     }
 }
 
@@ -160,6 +164,10 @@ int Tile::getType(){
 
 bool Tile::getHasClicked(){
     return hasClicked;
+}
+
+bool Tile::getIsFlag(){
+    return isFlag;
 }
 
 void Tile::openBlank(){

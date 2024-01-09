@@ -55,13 +55,22 @@ class MainWindow : public QMainWindow
         void createMap(int startX, int startY);
         void die();
 
+        void changeFlagCount(bool f); //true: flagCount++   false: flagCount--
+
     private slots:
         void update();
+        void dieAnimation();
 
     private:
         Ui::MainWindow *ui;
 
-        QTimer *timer;
+        QTimer *timer_dieAnimation;
+        QTimer *timer_game;
+        int gameTime;
+        int flagCount;
+
+        QGraphicsTextItem *text_flagCount;
+        QGraphicsTextItem *text_gameTime;
 
         void start();
 };
