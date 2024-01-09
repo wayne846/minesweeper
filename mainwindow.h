@@ -51,15 +51,22 @@ class MainWindow : public QMainWindow
 
         bool hadFirstClick;
         bool isDead;
+        bool isWin;
 
         void createMap(int startX, int startY);
         void die();
-
         void changeFlagCount(bool f); //true: flagCount++   false: flagCount--
+        void safeClick(); //check if win
 
     private slots:
         void update();
         void dieAnimation();
+
+        void on_actioneasy_triggered();
+
+        void on_actionmiddle_triggered();
+
+        void on_actionhard_triggered();
 
     private:
         Ui::MainWindow *ui;
@@ -68,6 +75,7 @@ class MainWindow : public QMainWindow
         QTimer *timer_game;
         int gameTime;
         int flagCount;
+        int safeTile_num;
 
         QGraphicsTextItem *text_flagCount;
         QGraphicsTextItem *text_gameTime;

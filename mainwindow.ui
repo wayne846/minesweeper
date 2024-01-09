@@ -34,7 +34,31 @@
      <height>24</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>選單</string>
+    </property>
+    <addaction name="actioneasy"/>
+    <addaction name="actionmiddle"/>
+    <addaction name="actionhard"/>
+   </widget>
+   <addaction name="menu"/>
   </widget>
+  <action name="actioneasy">
+   <property name="text">
+    <string>簡單</string>
+   </property>
+  </action>
+  <action name="actionmiddle">
+   <property name="text">
+    <string>中等</string>
+   </property>
+  </action>
+  <action name="actionhard">
+   <property name="text">
+    <string>困難</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

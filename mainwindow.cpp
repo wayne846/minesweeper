@@ -29,14 +29,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 }
 
 void MainWindow::start(){
+    qDebug() << WINDOW_WIDTH << " " << WINDOW_HEIGHT;
+
     //set some value
     hadFirstClick = false;
     isDead = false;
+    isWin = false;
     flagCount = MINE_NUM;
     gameTime = 0;
+    safeTile_num = HEIGHT_TILE_NUM * WIDTH_TILE_NUM - MINE_NUM;
 
     //set mainwindow
-    this->setGeometry(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    this->setMaximumSize(QSize(999999, 999999));
+    this->setMinimumSize(QSize(0, 0));
+    this->setGeometry(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT + 20);
     this->setMaximumSize(this->size());
     this->setMinimumSize(this->size());
     QRect screenSize = this->screen()->geometry();
@@ -70,7 +76,7 @@ void MainWindow::start(){
     text_flagCount->setFont(QFont("Rockwell", ui_height/50.0 * 22));
     text_flagCount->setPos(WINDOW_WIDTH/2.0 - ui_height*1.1, HUD_HEIGHT/2.0 - text_flagCount->boundingRect().height()/2.0);
     scene->addItem(text_flagCount);
-    text_gameTime = new QGraphicsTextItem(QString::number(gameTime)); //text_flagCount
+    text_gameTime = new QGraphicsTextItem(QString::number(gameTime)); //text_gameTime
     text_gameTime->setDefaultTextColor(Qt::white);
     text_gameTime->setFont(QFont("Rockwell", ui_height/50.0 * 22));
     text_gameTime->setPos(WINDOW_WIDTH/2.0 + ui_height*1.1, HUD_HEIGHT/2.0 - text_gameTime->boundingRect().height()/2.0);
@@ -122,7 +128,7 @@ void MainWindow::dieAnimation(){
 }
 
 void MainWindow::update(){
-    if(isDead) return;
+    if(isDead || isWin) return;
     gameTime++;
     text_gameTime->setPlainText(QString::number(gameTime));
 }
@@ -134,6 +140,13 @@ void MainWindow::changeFlagCount(bool f){
         flagCount--;
     }
     text_flagCount->setPlainText(QString::number(flagCount));
+}
+
+void MainWindow::safeClick(){
+    safeTile_num--;
+    if(safeTile_num <= 0){
+        isWin = true;
+    }
 }
 
 void MainWindow::createMap(int startX, int startY){
@@ -203,5 +216,47 @@ void MainWindow::createMap(int startX, int startY){
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+
+void MainWindow::on_actioneasy_triggered()
+{
+    TILE_WIDTH = 50;
+    WIDTH_TILE_NUM = 9;
+    HEIGHT_TILE_NUM = 9;
+    MINE_NUM = 10;
+    HUD_HEIGHT = 70;
+    WINDOW_WIDTH = TILE_WIDTH * WIDTH_TILE_NUM;
+    WINDOW_HEIGHT = TILE_WIDTH * HEIGHT_TILE_NUM + HUD_HEIGHT;
+
+    start();
+}
+
+
+void MainWindow::on_actionmiddle_triggered()
+{
+    TILE_WIDTH = 40;
+    WIDTH_TILE_NUM = 16;
+    HEIGHT_TILE_NUM = 16;
+    MINE_NUM = 40;
+    HUD_HEIGHT = 70;
+    WINDOW_WIDTH = TILE_WIDTH * WIDTH_TILE_NUM;
+    WINDOW_HEIGHT = TILE_WIDTH * HEIGHT_TILE_NUM + HUD_HEIGHT;
+
+    start();
+}
+
+
+void MainWindow::on_actionhard_triggered()
+{
+    TILE_WIDTH = 30;
+    WIDTH_TILE_NUM = 30;
+    HEIGHT_TILE_NUM = 16;
+    MINE_NUM = 99;
+    HUD_HEIGHT = 70;
+    WINDOW_WIDTH = TILE_WIDTH * WIDTH_TILE_NUM;
+    WINDOW_HEIGHT = TILE_WIDTH * HEIGHT_TILE_NUM + HUD_HEIGHT;
+
+    start();
 }
 

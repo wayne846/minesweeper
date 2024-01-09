@@ -89,10 +89,13 @@ void Tile::click(){
     this->setBrush(clicked_color);
     this->setPen(clicked_color);
     this->setAcceptHoverEvents(false);
+
     image_type->show();
     if(isFlag) setFlag();
+
     hasClicked = true;
     if(type == 0) openBlank();
+    if(type != -1) window->safeClick();
     if(type == -1) window->die();
 }
 
