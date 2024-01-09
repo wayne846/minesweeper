@@ -10,14 +10,9 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
 
-    //game value
-    TILE_WIDTH = 50;
-    WIDTH_TILE_NUM = 9;
-    HEIGHT_TILE_NUM = 9;
-    MINE_NUM = 10;
-    HUD_HEIGHT = 70;
-    WINDOW_WIDTH = TILE_WIDTH * WIDTH_TILE_NUM;
-    WINDOW_HEIGHT = TILE_WIDTH * HEIGHT_TILE_NUM + HUD_HEIGHT;
+    //set game
+    sizePercent = 1;
+    setDifficulty(1);
 
     //timer
     timer_dieAnimation = new QTimer(this);
@@ -29,8 +24,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 }
 
 void MainWindow::start(){
-    qDebug() << WINDOW_WIDTH << " " << WINDOW_HEIGHT;
-
     //set some value
     hadFirstClick = false;
     isDead = false;
@@ -146,6 +139,14 @@ void MainWindow::safeClick(){
     safeTile_num--;
     if(safeTile_num <= 0){
         isWin = true;
+        QColor color = QColor(57, 102, 43);
+        QGraphicsTextItem *text_win = scene->addText("Congratulations", QFont("Rockwell", HUD_HEIGHT * 0.7 / 50.0 * 25));
+        QGraphicsRectItem *bg = scene->addRect(QRect(0, 0, WINDOW_WIDTH, text_win->boundingRect().height()*1.2), QPen(color), QBrush(color));
+        bg->setZValue(1);
+        bg->setPos(0, HUD_HEIGHT + (WINDOW_HEIGHT-HUD_HEIGHT)/3 - text_win->boundingRect().height()*0.1);
+        text_win->setZValue(2);
+        text_win->setDefaultTextColor(QColor(210, 210, 210));
+        text_win->setPos(WINDOW_WIDTH/2 - text_win->boundingRect().width()/2, HUD_HEIGHT + (WINDOW_HEIGHT-HUD_HEIGHT)/3);
     }
 }
 
@@ -213,6 +214,33 @@ void MainWindow::createMap(int startX, int startY){
     hadFirstClick = true;
 }
 
+void MainWindow::setDifficulty(int n){
+    difficulty = n;
+    switch(n){
+        case 1:
+            TILE_WIDTH = 50 * sizePercent;
+            WIDTH_TILE_NUM = 9;
+            HEIGHT_TILE_NUM = 9;
+            MINE_NUM = 10;
+            break;
+        case 2:
+            TILE_WIDTH = 40 * sizePercent;
+            WIDTH_TILE_NUM = 16;
+            HEIGHT_TILE_NUM = 16;
+            MINE_NUM = 40;
+            break;
+        case 3:
+            TILE_WIDTH = 30 * sizePercent;
+            WIDTH_TILE_NUM = 30;
+            HEIGHT_TILE_NUM = 16;
+            MINE_NUM = 99;
+            break;
+    }
+    HUD_HEIGHT = 70 * sizePercent;
+    WINDOW_WIDTH = TILE_WIDTH * WIDTH_TILE_NUM;
+    WINDOW_HEIGHT = TILE_WIDTH * HEIGHT_TILE_NUM + HUD_HEIGHT;
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -221,42 +249,61 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actioneasy_triggered()
 {
-    TILE_WIDTH = 50;
-    WIDTH_TILE_NUM = 9;
-    HEIGHT_TILE_NUM = 9;
-    MINE_NUM = 10;
-    HUD_HEIGHT = 70;
-    WINDOW_WIDTH = TILE_WIDTH * WIDTH_TILE_NUM;
-    WINDOW_HEIGHT = TILE_WIDTH * HEIGHT_TILE_NUM + HUD_HEIGHT;
-
+    setDifficulty(1);
     start();
 }
 
 
 void MainWindow::on_actionmiddle_triggered()
 {
-    TILE_WIDTH = 40;
-    WIDTH_TILE_NUM = 16;
-    HEIGHT_TILE_NUM = 16;
-    MINE_NUM = 40;
-    HUD_HEIGHT = 70;
-    WINDOW_WIDTH = TILE_WIDTH * WIDTH_TILE_NUM;
-    WINDOW_HEIGHT = TILE_WIDTH * HEIGHT_TILE_NUM + HUD_HEIGHT;
-
+    setDifficulty(2);
     start();
 }
 
 
 void MainWindow::on_actionhard_triggered()
 {
-    TILE_WIDTH = 30;
-    WIDTH_TILE_NUM = 30;
-    HEIGHT_TILE_NUM = 16;
-    MINE_NUM = 99;
-    HUD_HEIGHT = 70;
-    WINDOW_WIDTH = TILE_WIDTH * WIDTH_TILE_NUM;
-    WINDOW_HEIGHT = TILE_WIDTH * HEIGHT_TILE_NUM + HUD_HEIGHT;
+    setDifficulty(3);
+    start();
+}
 
+
+void MainWindow::on_actionsize60_triggered()
+{
+    sizePercent = 0.6;
+    setDifficulty(difficulty);
+    start();
+}
+
+
+void MainWindow::on_actionsize80_triggered()
+{
+    sizePercent = 0.8;
+    setDifficulty(difficulty);
+    start();
+}
+
+
+void MainWindow::on_actionsize100_triggered()
+{
+    sizePercent = 1;
+    setDifficulty(difficulty);
+    start();
+}
+
+
+void MainWindow::on_actionsize120_triggered()
+{
+    sizePercent = 1.2;
+    setDifficulty(difficulty);
+    start();
+}
+
+
+void MainWindow::on_actionsize140_triggered()
+{
+    sizePercent = 1.4;
+    setDifficulty(difficulty);
     start();
 }
 

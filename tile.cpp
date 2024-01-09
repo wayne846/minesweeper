@@ -187,7 +187,7 @@ void Tile::openBlank(){
 }
 
 void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event){
-    if(window->isDead) return;
+    if(window->isDead || window->isWin) return;
     switch(event->button()){
         case Qt::LeftButton:
             if(!isFlag && !hasClicked){
@@ -204,7 +204,7 @@ void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event){
 }
 
 void Tile::hoverEnterEvent(QGraphicsSceneHoverEvent *event){
-    if(window->isDead) return;
+    if(window->isDead || window->isWin) return;
     this->setBrush(hover_color);
     this->setPen(hover_color);
 }

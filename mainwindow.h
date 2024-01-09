@@ -68,6 +68,16 @@ class MainWindow : public QMainWindow
 
         void on_actionhard_triggered();
 
+        void on_actionsize60_triggered();
+
+        void on_actionsize80_triggered();
+
+        void on_actionsize100_triggered();
+
+        void on_actionsize120_triggered();
+
+        void on_actionsize140_triggered();
+
     private:
         Ui::MainWindow *ui;
 
@@ -76,10 +86,13 @@ class MainWindow : public QMainWindow
         int gameTime;
         int flagCount;
         int safeTile_num;
+        double sizePercent;
+        int difficulty;
 
         QGraphicsTextItem *text_flagCount;
         QGraphicsTextItem *text_gameTime;
 
         void start();
+        void setDifficulty(int n);
 };
 #endif // MAINWINDOW_H

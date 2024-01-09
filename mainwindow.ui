@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>踩地雷</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="image.qrc">
+    <normaloff>:/mine.png</normaloff>:/mine.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGraphicsView" name="graphicsView">
@@ -38,9 +42,20 @@
     <property name="title">
      <string>選單</string>
     </property>
+    <widget class="QMenu" name="menu_2">
+     <property name="title">
+      <string>調整大小</string>
+     </property>
+     <addaction name="actionsize60"/>
+     <addaction name="actionsize80"/>
+     <addaction name="actionsize100"/>
+     <addaction name="actionsize120"/>
+     <addaction name="actionsize140"/>
+    </widget>
     <addaction name="actioneasy"/>
     <addaction name="actionmiddle"/>
     <addaction name="actionhard"/>
+    <addaction name="menu_2"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -59,7 +74,34 @@
     <string>困難</string>
    </property>
   </action>
+  <action name="actionsize60">
+   <property name="text">
+    <string>60%</string>
+   </property>
+  </action>
+  <action name="actionsize80">
+   <property name="text">
+    <string>80%</string>
+   </property>
+  </action>
+  <action name="actionsize100">
+   <property name="text">
+    <string>100%</string>
+   </property>
+  </action>
+  <action name="actionsize120">
+   <property name="text">
+    <string>120%</string>
+   </property>
+  </action>
+  <action name="actionsize140">
+   <property name="text">
+    <string>140%</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="image.qrc"/>
+ </resources>
  <connections/>
 </ui>
